@@ -1,0 +1,15 @@
+services:
+  auth:
+    container_name: main
+    build:
+      context: .
+      args:
+        - APP=main
+    restart: always
+    ports:
+      - 58999:58999
+    networks:
+      - api-pagos
+
+networks:
+  api-pagos:
