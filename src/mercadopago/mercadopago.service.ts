@@ -6,15 +6,19 @@ import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create
 import MercadoPagoConfig, { Preference, Payment } from 'mercadopago';
 import { PaymentGetData } from 'mercadopago/dist/clients/payment/get/types';
 
-type IEvent = {
+type TEvent = {
     id: number,
     live_mode: boolean,
     type: string,
     date_created: string,
     user_id: number,
     api_version: string,
-    action: "payment.created",
+    action: string,
     data: any
+}
+
+type TPayment = {
+
 }
 @Injectable()
 export class MercadopagoService {
@@ -65,9 +69,21 @@ export class MercadopagoService {
         return response;
     }
 
-    async listenEvents(body: IEvent) {
+    async listenEvents(body: TEvent) {
+
 
         if(body.type === 'payment'){
+            if(body.action == 'payment.created'){
+                const payment = await this.getPaymentDetails(body.data.id);
+                console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)
+                
+                // return payment;
+                //guardar payment en la base de datos
+            }
+
+            if(body.action == ''){
+
+            }
 
         }
         
