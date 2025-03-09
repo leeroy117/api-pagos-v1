@@ -5,6 +5,7 @@ import { PreferenceRequest } from 'mercadopago/dist/clients/preference/commonTyp
 import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create/types';
 import MercadoPagoConfig, { Preference, Payment } from 'mercadopago';
 import { PaymentGetData } from 'mercadopago/dist/clients/payment/get/types';
+import { DatabaseService } from 'src/database/database.service';
 
 type TEvent = {
     id: number,
@@ -25,24 +26,26 @@ export class MercadopagoService {
     client: MercadoPagoConfig;
     accessToken = 'APP_USR-1819459043832827-022615-69df729b62be9c09769cb69f8668113a-2292996564';
 
-    constructor(){
+    constructor(private databaseService: DatabaseService){
         this.client = new MercadoPagoConfig({ accessToken: this.accessToken, options: {testToken: true, } });
     }
 
     async createPreference(preferenceData: CreatePreferenceCheckoutPro) {
         const uniqueID = createId()
 
-        const items = preferenceData.items.map((item) => {
-            const {id, title, quantity, unit_price} = item;
+        // const items = preferenceData.items.map((item) => {
+        //     const {id, title, quantity, unit_price} = item;
 
-            return {
-                id,
-                title,
-                unit_price,
-                quantity,
-                
-            }
-        });
+        //     return {
+        //         id,
+        //         title,
+        //         unit_price,
+        //         quantity,
+
+        //     }
+        // });
+
+        const items = preferenceData.items.map((item )=> item);
 
         const itemsReference = preferenceData.items.map(i => i.id ).join('-');
         const materiasReference = preferenceData.items.map(i => i.id_materia ).join('-');
@@ -66,7 +69,26 @@ export class MercadopagoService {
         const preference = new Preference(this.client);
 
         const response = await preference.create(preferenceCreateData);
-        console.log("🚀 ~ MercadoPagoService ~ returnnewPromise ~ response:", response)
+        console.log("🚀 ~ MercadoPagoService ~ returnnewPromise ~ response:", response);
+
+        items.forEach(async (item,index)=> {
+            await this.databaseService.query(`
+                INSERT INTO 
+                    tb_ss_preferences 
+                (
+                    external_reference, 
+                    id_materia, 
+                    id_alumno, 
+                    id_servicio
+                ) 
+                    values
+                (
+                    ?,?,?,?
+                ) 
+                        
+            `, [externalReference, item.id_materia, preferenceData.id_alumno, item.id_servicio]);
+        });
+
         return response;
     }
 
