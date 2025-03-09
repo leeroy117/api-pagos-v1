@@ -4,6 +4,7 @@ import { createId } from '@paralleldrive/cuid2';
 import { PreferenceRequest } from 'mercadopago/dist/clients/preference/commonTypes';
 import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create/types';
 import MercadoPagoConfig, { Preference, Payment } from 'mercadopago';
+import { PaymentGetData } from 'mercadopago/dist/clients/payment/get/types';
 
 @Injectable()
 export class MercadopagoService {
@@ -33,7 +34,7 @@ export class MercadopagoService {
         const preferenceCreateData: PreferenceCreateData = {
             body: preferenceRequestData,
             requestOptions: {
-                testToken: false,
+                
             }
         }
 
@@ -46,5 +47,17 @@ export class MercadopagoService {
 
     async listenEvents(body: string) {
         
+    }
+
+    async getPaymentDetails(paymentId: string) {
+        const payment = new Payment(this.client);
+        const requestOptions: PaymentGetData = {
+            id: paymentId,
+            requestOptions: {
+                testToken: true,
+            }
+        }
+        const paymentDetails = await payment.get(requestOptions);
+        return paymentDetails;
     }
 }

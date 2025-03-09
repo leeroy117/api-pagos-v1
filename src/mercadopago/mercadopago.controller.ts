@@ -1,4 +1,4 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post } from '@nestjs/common';
 import { CreatePreferenceCheckoutPro } from './dto/CreatePreferenceCheckoutProDto';
 import { MercadopagoService } from './mercadopago.service';
 
@@ -17,5 +17,10 @@ export class MercadopagoController {
     @Post()
     async listenEvents(@Body() body: any) {
         console.log("��� ~ PagosMpController ~ listenEvents ~ body:", body);
+    }
+
+    @Get('payment/:payment_id')
+    async getPaymentDetails(@Param('payment_id') paymentId: string) {
+        return this.mercadopagoService.getPaymentDetails(paymentId);
     }
 }
