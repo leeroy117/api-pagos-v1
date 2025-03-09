@@ -24,4 +24,6 @@ export class ItemPreferenceDto implements Items {
 
     id_servicio: number;
 
+    category_id?: string | undefined;
+
 }

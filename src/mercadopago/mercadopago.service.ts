@@ -40,6 +40,7 @@ export class MercadopagoService {
                 title,
                 unit_price,
                 quantity,
+                
             }
         });
 
@@ -77,8 +78,14 @@ export class MercadopagoService {
                 const payment = await this.getPaymentDetails(body.data.id);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)
                 
+
+                if(payment.status == 'approved'){
+                    //guardar payment en la base de datos en tabla tb_pagos
+
+
+
+                }
                 // return payment;
-                //guardar payment en la base de datos
             }
 
             if(body.action == ''){
