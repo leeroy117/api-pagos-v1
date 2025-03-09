@@ -72,7 +72,7 @@ export class MercadopagoService {
     async listenEvents(body: TEvent) {
 
 
-        if(body.type === 'payment'){
+        if(body.type == 'payment'){
             if(body.action == 'payment.created'){
                 const payment = await this.getPaymentDetails(body.data.id);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)

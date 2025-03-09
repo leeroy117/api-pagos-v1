@@ -17,6 +17,7 @@ export class MercadopagoController {
     @Post()
     async listenEvents(@Body() body: any) {
         console.log("��� ~ PagosMpController ~ listenEvents ~ body:", body);
+        this.mercadopagoService.listenEvents(body);
     }
 
     @Get('payments/:payment_id')
