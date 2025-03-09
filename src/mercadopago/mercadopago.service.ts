@@ -60,15 +60,16 @@ export class MercadopagoService {
     }
 
     async getPaymentDetails(paymentId: string) {
-        console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId)
+        
+        console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId);
         const payment = new Payment(this.client);
         const requestOptions: PaymentGetData = {
-            id: paymentId,
+            id: parseInt(paymentId),
             requestOptions: {
                 testToken: true,
             }
         }
-        const paymentDetails = await payment.get(requestOptions);
-        return paymentDetails;
+        const response = await payment.get(requestOptions);
+        return response;
     }
 }
