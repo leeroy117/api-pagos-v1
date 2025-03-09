@@ -60,6 +60,7 @@ export class MercadopagoService {
     }
 
     async getPaymentDetails(paymentId: string) {
+        console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId)
         const payment = new Payment(this.client);
         const requestOptions: PaymentGetData = {
             id: paymentId,
