@@ -87,4 +87,18 @@ export class MercadopagoService {
         const response = await payment.get({id: paymentId});
         return response;
     }
+
+    async searchPayment(){
+        console.log("��� ~ MercadopagoService ~ searchPayment ~ ");
+        const payment = new Payment(this.client);
+        const response = await payment.search({
+            options: {
+                
+            },
+            requestOptions: {
+                testToken: true,
+            }
+        });
+        return response;
+    }
 }

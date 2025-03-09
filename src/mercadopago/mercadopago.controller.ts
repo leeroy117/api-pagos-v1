@@ -24,4 +24,9 @@ export class MercadopagoController {
         console.log("🚀 ~ MercadopagoController ~ getPaymentDetails ~ paymentId:", paymentId)
         return this.mercadopagoService.getPaymentDetails(paymentId);
     }
+
+    @Get('payments/search')
+    async getPayments() {
+        return this.mercadopagoService.searchPayment();
+    }
 }
