@@ -6,13 +6,23 @@ import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create
 import MercadoPagoConfig, { Preference, Payment } from 'mercadopago';
 import { PaymentGetData } from 'mercadopago/dist/clients/payment/get/types';
 
+type IEvent = {
+    id: number,
+    live_mode: boolean,
+    type: string,
+    date_created: string,
+    user_id: number,
+    api_version: string,
+    action: "payment.created",
+    data: any
+}
 @Injectable()
 export class MercadopagoService {
     client: MercadoPagoConfig;
     accessToken = 'APP_USR-1819459043832827-022615-69df729b62be9c09769cb69f8668113a-2292996564';
 
     constructor(){
-        this.client = new MercadoPagoConfig({ accessToken: this.accessToken, options: {testToken: true} });
+        this.client = new MercadoPagoConfig({ accessToken: this.accessToken, options: {testToken: true, } });
     }
 
     async createPreference(preferenceData: CreatePreferenceCheckoutPro) {
@@ -55,7 +65,11 @@ export class MercadopagoService {
         return response;
     }
 
-    async listenEvents(body: string) {
+    async listenEvents(body: IEvent) {
+
+        if(body.type === 'payment'){
+
+        }
         
     }
 
@@ -63,13 +77,14 @@ export class MercadopagoService {
         
         console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId);
         const payment = new Payment(this.client);
-        const requestOptions: PaymentGetData = {
-            id: parseInt(paymentId),
-            requestOptions: {
-                testToken: true,
-            }
-        }
-        const response = await payment.get(requestOptions);
+        // const requestOptions: PaymentGetData = {
+        //     id: paymentId,
+        //     requestOptions: {
+        //         testToken: true,
+        //         idempotencyKey: ''
+        //     }
+        // }
+        const response = await payment.get({id: paymentId});
         return response;
     }
 }

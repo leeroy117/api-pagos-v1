@@ -19,7 +19,7 @@ export class MercadopagoController {
         console.log("��� ~ PagosMpController ~ listenEvents ~ body:", body);
     }
 
-    @Get('payment/:payment_id')
+    @Get('payments/:payment_id')
     async getPaymentDetails(@Param('payment_id') paymentId: string) {
         console.log("🚀 ~ MercadopagoController ~ getPaymentDetails ~ paymentId:", paymentId)
         return this.mercadopagoService.getPaymentDetails(paymentId);
