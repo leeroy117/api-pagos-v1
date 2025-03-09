@@ -12,7 +12,7 @@ export class MercadopagoService {
     accessToken = 'APP_USR-1819459043832827-022615-69df729b62be9c09769cb69f8668113a-2292996564';
 
     constructor(){
-        this.client = new MercadoPagoConfig({ accessToken: this.accessToken });
+        this.client = new MercadoPagoConfig({ accessToken: this.accessToken, options: {testToken: true} });
     }
 
     async createPreference(preferenceData: CreatePreferenceCheckoutPro) {
