@@ -18,13 +18,24 @@ export class MercadopagoService {
     async createPreference(preferenceData: CreatePreferenceCheckoutPro) {
         const uniqueID = createId()
 
+        const items = preferenceData.items.map((item) => {
+            const {id, title, quantity, unit_price} = item;
+
+            return {
+                id,
+                title,
+                unit_price,
+                quantity,
+            }
+        });
+
         const itemsReference = preferenceData.items.map(i => i.id ).join('-');
         const materiasReference = preferenceData.items.map(i => i.id_materia ).join('-');
         console.log("🚀 ~ MercadoPagoService ~ createPreference ~ uniqueID:", uniqueID)
         const externalReference = `${preferenceData.id_alumno}_${itemsReference}__${uniqueID}`;
 
         const preferenceRequestData: PreferenceRequest = {
-            items: preferenceData.items,
+            items,
             auto_return: preferenceData.auto_return,
             back_urls: preferenceData.back_urls,
             external_reference: externalReference,
