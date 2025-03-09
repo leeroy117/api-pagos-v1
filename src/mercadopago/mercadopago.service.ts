@@ -39,13 +39,12 @@ export class MercadopagoService {
             auto_return: preferenceData.auto_return,
             back_urls: preferenceData.back_urls,
             external_reference: externalReference,
-            notification_url: 'https://'
         }
 
         const preferenceCreateData: PreferenceCreateData = {
             body: preferenceRequestData,
             requestOptions: {
-                
+                testToken: true, 
             }
         }
 
