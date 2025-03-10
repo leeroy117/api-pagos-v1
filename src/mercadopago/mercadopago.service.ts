@@ -115,11 +115,11 @@ export class MercadopagoService {
                 const payment = await this.getPaymentDetails(body.data.id);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)
                 
-                // const preferencesItems: Array<TPreferenceAG> = await this.databaseService
-                //         .query(`
-                //             SELECT * FROM tb_pp_preferences WHERE external_reference = ?`, 
-                //             [payment.external_reference]
-                //         );
+                const preferencesItems: Array<TPreferenceAG> = await this.databaseService
+                        .query(`
+                            SELECT * FROM tb_pp_preferences WHERE external_reference = ?`, 
+                            [payment.external_reference]
+                        );
 
                 // insertar pago en payments y payments_items de MP 
                 const items = payment.additional_info?.items;
@@ -154,6 +154,9 @@ export class MercadopagoService {
                             ]);
 
                 items?.forEach(async (item, index) => {
+                    const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
+
+                    
                     //insertar items en payments_items de MP
                     await this.databaseService.query(`
                         INSERT INTO
@@ -164,11 +167,13 @@ export class MercadopagoService {
                                 title,
                                 unit_price,
                                 quantity,
-                                created_at
+                                created_at,
+                                id_materia,
+                                id_servicio_tipo
                             )
                             values
                             (
-                                ?,?,?,?,?,?
+                                ?,?,?,?,?,?,?,?
                             )
                         `, [
                             payment.id,
@@ -176,7 +181,9 @@ export class MercadopagoService {
                             item.title,
                             item.unit_price,
                             item.quantity,
-                            new Date()
+                            new Date(),
+                            pi?.id_materia,
+                            pi?.id_servicio_tipo
                         ]);
                 });
                 
