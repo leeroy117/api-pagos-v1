@@ -156,7 +156,6 @@ export class MercadopagoService {
                 items?.forEach(async (item, index) => {
                     const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
 
-                    
                     //insertar items en payments_items de MP
                     await this.databaseService.query(`
                         INSERT INTO

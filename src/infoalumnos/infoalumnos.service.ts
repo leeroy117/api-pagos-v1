@@ -24,7 +24,7 @@ export class InfoalumnosService {
         
                 
         if(pagos.length == 0 ){
-            return false;
+            return 0;
         }
         
         const pago = pagos[0];
@@ -33,9 +33,9 @@ export class InfoalumnosService {
         const otherDate = new Date(pago.fecha_expiracion); // Otra fecha a comparar
 
         if (now <= otherDate) {
-            return true;
+            return 1;
         } else {
-            return false;
+            return 0;
         }
 
     }
