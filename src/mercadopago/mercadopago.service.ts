@@ -79,26 +79,6 @@ export class MercadopagoService {
         const response = await preference.create(preferenceCreateData);
         console.log("🚀 ~ MercadoPagoService ~ returnnewPromise ~ response:", response);
 
-        // console.log("🚀 ~ MercadopagoService ~ createPreference ~ externalReference:", externalReference)
-        // console.log("🚀 ~ Mer", items[0].id_materia)
-        // console.log("🚀 ~ Meraa", preferenceData.id_alumno)
-        // console.log("🚀 ~ Merdaddd", items[0].id)
-
-        // const responseDb = await this.databaseService.query(`
-        //     INSERT INTO 
-        //         escolar.tb_pp_preferences 
-        //     (
-        //         external_reference, 
-        //         id_materia, 
-        //         id_alumno, 
-        //         id_servicio,
-        //         created_at
-        //     ) 
-        //         values (?,?,?,?,?) 
-                    
-        // `, [externalReference, items[0].id_materia , preferenceData.id_alumno, items[0].id, new Date()]);
-        // console.log("🚀 ~ MercadopagoService ~ createPreference ~ responseDb:", responseDb)
-
         items.forEach(async (item,index)=> {
             console.log("🚀 ~ MercadopagoService ~ items.forEach ~ item:", item);
             console.log('preferenceData.id_alumno', preferenceData.id_alumno)
@@ -135,9 +115,74 @@ export class MercadopagoService {
                 const payment = await this.getPaymentDetails(body.data.id);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)
                 
-                if(payment.status == 'approved'){
-                    //guardar payment en la base de datos en tabla tb_pagos
+                // const preferencesItems: Array<TPreferenceAG> = await this.databaseService
+                //         .query(`
+                //             SELECT * FROM tb_pp_preferences WHERE external_reference = ?`, 
+                //             [payment.external_reference]
+                //         );
 
+                // insertar pago en payments y payments_items de MP 
+                const items = payment.additional_info?.items;
+
+                await this.databaseService.query(`
+                        INSERT INTO 
+                            escolar.tb_pp_payments 
+                            (
+                                payment_id,
+                                external_reference,
+                                status,
+                                status_detail,
+                                transaction_amount,
+                                net_received_amount,
+                                total_paid_amount,
+                                payment_method_id,
+                                payment_type_id
+                            )
+                            values 
+                            (
+                                ?,?,?,?,?,?,?,?,?
+                            )`, [
+                                    payment.id, 
+                                    payment.external_reference, 
+                                    payment.status, 
+                                    payment.status_detail, 
+                                    payment.transaction_amount, 
+                                    payment.transaction_details?.net_received_amount, 
+                                    payment.transaction_details?.total_paid_amount, 
+                                    payment.payment_method_id, 
+                                    payment.payment_type_id
+                            ]);
+
+                items?.forEach(async (item, index) => {
+                    //insertar items en payments_items de MP
+                    await this.databaseService.query(`
+                        INSERT INTO
+                            escolar.tb_pp_payments_items
+                            (
+                                payment_id,
+                                id_servicio,
+                                title,
+                                unit_price,
+                                quantity,
+                                created_at
+                            )
+                            values
+                            (
+                                ?,?,?,?,?,?
+                            )
+                        `, [
+                            payment.id,
+                            item.id,    
+                            item.title,
+                            item.unit_price,
+                            item.quantity,
+                            new Date()
+                        ]);
+                });
+                
+                if(payment.status == 'approved') {
+                    //guardar payment en la base de datos en tabla tb_pagos
+                    
                     //necesito primero consultar en la tb_pp_preferences 
                     //el external reference del pago para saber que materia se va a habilitar o 
                     // en caso de examen que examen se habilita
