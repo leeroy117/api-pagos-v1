@@ -113,12 +113,13 @@ export class MercadopagoService {
                     id_materia, 
                     id_alumno, 
                     id_servicio,
+                    id_servicio_tipo,
                     created_at
                 ) 
                     values
-                (?,?,?,?,?) 
+                (?,?,?,?,?,?) 
                         
-            `, [externalReference, item.id_materia, preferenceData.id_alumno, item.id, new Date()]);
+            `, [externalReference, item.id_materia, preferenceData.id_alumno, item.id, item.id_servicio_tipo, new Date()]);
 
             console.log("🚀 ~ MercadopagoService ~ items.forEach ~ response:", response)
         });
