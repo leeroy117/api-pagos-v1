@@ -20,10 +20,16 @@ export class ItemPreferenceDto implements Items {
     @IsNotEmpty()
     quantity: number;
 
+    @IsInt()
+    @IsNotEmpty()
     id_materia: number;
 
+    @IsInt()
+    @IsNotEmpty()
     id_servicio: number;
 
-    category_id?: string | undefined;
+    @IsInt()
+    @IsNotEmpty()
+    id_servicio_tipo: number;
 
 }
