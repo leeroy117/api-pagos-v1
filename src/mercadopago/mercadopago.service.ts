@@ -182,10 +182,12 @@ export class MercadopagoService {
                     payment.transaction_details?.total_paid_amount,
                     payment.payment_method_id,
                     payment.payment_type_id,
-                    // payment.date_created,
-                    new Date(),
-                    payment.date_last_updated,
-                    payment.date_approved,
+                    new Date(payment.date_created || '').toISOString().slice(0, 19).replace("T", " "),
+                    // new Date(),
+                    // payment.date_last_updated,
+                    new Date(payment.date_last_updated || '').toISOString().slice(0, 19).replace("T", " "),
+                    new Date(payment.date_approved || '').toISOString().slice(0, 19).replace("T", " "),
+                    // payment.date_approved,
                 ])
 
                 // insertar items en payments_items de MP
