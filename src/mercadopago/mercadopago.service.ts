@@ -182,7 +182,8 @@ export class MercadopagoService {
                     payment.transaction_details?.total_paid_amount,
                     payment.payment_method_id,
                     payment.payment_type_id,
-                    payment.date_created,
+                    // payment.date_created,
+                    new Date(),
                     payment.date_last_updated,
                     payment.date_approved,
                 ])
