@@ -155,22 +155,24 @@ export class MercadopagoService {
                 //                     payment.payment_type_id
                 //             ]);
 
-                    //`(IN _payment_id BIGINT, 
-                    // IN _external_reference VARCHAR(64), 
-                    // IN _status VARCHAR(50), 
-                    // IN _status_detail VARCHAR(50), 
-                    // IN _transaction_amount DECIMAL(8,2), 
-                    // IN _net_received_amount DECIMAL(8,2), 
-                    // IN _total_paid_amount DECIMAL(8,2), 
-                    // IN _payment_method_id VARCHAR(100),
-                    // IN _payment_type_id VARCHAR(100), 
-                    // IN _date_created VARCHAR(20), 
-                    // IN _date_last_updated VARCHAR(20))
-                    //IN _date_approved VARCHAR(20
+                // IN _id_alumno BIGINT, 
+                // IN _payment_id BIGINT, 
+                // IN _external_reference VARCHAR(64), 
+                // IN _status VARCHAR(50), 
+                // IN _status_detail VARCHAR(50), 
+                // IN _transaction_amount DECIMAL(8,2), 
+                // IN _net_received_amount DECIMAL(8,2), 
+                // IN _total_paid_amount DECIMAL(8,2), 
+                // IN _payment_method_id VARCHAR(100), 
+                // IN _payment_type_id VARCHAR(100), 
+                // IN _date_created VARCHAR(20), 
+                // IN _date_last_updated VARCHAR(20), 
+                // IN _date_approved VARCHAR(20)
 
                 // insertar payment cteado en la tabla de payments de mp
-                const queryInsertPayment = `CALL escolar.sp_pp_payments_insert(?,?,?,?,?,?,?,?,?,?,?,?)`;
+                const queryInsertPayment = `CALL escolar.sp_pp_payments_insert(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
                 this.databaseService.query(queryInsertPayment, [
+                    idAlumno,
                     payment.id,
                     payment.external_reference,
                     payment.status,
