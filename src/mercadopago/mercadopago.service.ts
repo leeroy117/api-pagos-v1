@@ -123,68 +123,128 @@ export class MercadopagoService {
 
                 // insertar pago en payments y payments_items de MP 
                 const items = payment.additional_info?.items;
+                const externalReference = payment.external_reference || '';
+                const idAlumno =  externalReference.slice(0, externalReference.indexOf("_"));
 
-                await this.databaseService.query(`
-                        INSERT INTO 
-                            escolar.tb_pp_payments 
-                            (
-                                payment_id,
-                                external_reference,
-                                status,
-                                status_detail,
-                                transaction_amount,
-                                net_received_amount,
-                                total_paid_amount,
-                                payment_method_id,
-                                payment_type_id
-                            )
-                            values 
-                            (
-                                ?,?,?,?,?,?,?,?,?
-                            )`, [
-                                    payment.id, 
-                                    payment.external_reference, 
-                                    payment.status, 
-                                    payment.status_detail, 
-                                    payment.transaction_amount, 
-                                    payment.transaction_details?.net_received_amount, 
-                                    payment.transaction_details?.total_paid_amount, 
-                                    payment.payment_method_id, 
-                                    payment.payment_type_id
-                            ]);
+                // await this.databaseService.query(`
+                //         INSERT INTO 
+                //             escolar.tb_pp_payments 
+                //             (
+                //                 payment_id,
+                //                 external_reference,
+                //                 status,
+                //                 status_detail,
+                //                 transaction_amount,
+                //                 net_received_amount,
+                //                 total_paid_amount,
+                //                 payment_method_id,
+                //                 payment_type_id
+                //             )
+                //             values 
+                //             (
+                //                 ?,?,?,?,?,?,?,?,?
+                //             )`, [
+                //                     payment.id, 
+                //                     payment.external_reference, 
+                //                     payment.status, 
+                //                     payment.status_detail, 
+                //                     payment.transaction_amount, 
+                //                     payment.transaction_details?.net_received_amount, 
+                //                     payment.transaction_details?.total_paid_amount, 
+                //                     payment.payment_method_id, 
+                //                     payment.payment_type_id
+                //             ]);
 
-                items?.forEach(async (item, index) => {
+                    //`(IN _payment_id BIGINT, 
+                    // IN _external_reference VARCHAR(64), 
+                    // IN _status VARCHAR(50), 
+                    // IN _status_detail VARCHAR(50), 
+                    // IN _transaction_amount DECIMAL(8,2), 
+                    // IN _net_received_amount DECIMAL(8,2), 
+                    // IN _total_paid_amount DECIMAL(8,2), 
+                    // IN _payment_method_id VARCHAR(100),
+                    // IN _payment_type_id VARCHAR(100), 
+                    // IN _date_created VARCHAR(20), 
+                    // IN _date_last_updated VARCHAR(20))
+                    //IN _date_approved VARCHAR(20
+
+                // insertar payment cteado en la tabla de payments de mp
+                const queryInsertPayment = `CALL escolar.sp_pp_payments_insert(?,?,?,?,?,?,?,?,?,?,?,?)`;
+                this.databaseService.query(queryInsertPayment, [
+                    payment.id,
+                    payment.external_reference,
+                    payment.status,
+                    payment.status_detail,
+                    payment.transaction_amount,
+                    payment.transaction_details?.net_received_amount,
+                    payment.transaction_details?.total_paid_amount,
+                    payment.payment_method_id,
+                    payment.payment_type_id,
+                    payment.date_created,
+                    payment.date_last_updated,
+                    payment.date_approved,
+                ])
+
+                // insertar items en payments_items de MP
+                items?.forEach((item, index) => {
                     const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
-
-                    //insertar items en payments_items de MP
-                    await this.databaseService.query(`
-                        INSERT INTO
-                            escolar.tb_pp_payments_items
-                            (
-                                payment_id,
-                                id_servicio,
-                                title,
-                                unit_price,
-                                quantity,
-                                created_at,
-                                id_materia,
-                                id_servicio_tipo
-                            )
-                            values
-                            (
-                                ?,?,?,?,?,?,?,?
-                            )
-                        `, [
-                            payment.id,
-                            item.id,    
-                            item.title,
-                            item.unit_price,
-                            item.quantity,
-                            new Date(),
-                            pi?.id_materia,
-                            pi?.id_servicio_tipo
-                        ]);
+                    // IN _id_pp_payment BIGINT, 
+                    // IN _id_alumno BIGINT, 
+                    // IN _id_materia BIGINT,
+                    // IN _id_servicio BIGINT, 
+                    // IN _payment_id BIGINT, 
+                    // IN _title VARCHAR(255), 
+                    // IN _unit_price decimal(8,2), 
+                    // IN _quantity INT, 
+                    // IN _created_at VARCHAR(20)
+                    const queryInsertItemsPayment = `CALL escolar.sp_pp_items_insert(?,?,?,?,?,?,?,?,?);`;
+                    this.databaseService.query(queryInsertItemsPayment, [
+                        payment.id,
+                        idAlumno,
+                        pi?.id_materia,
+                        pi?.id_servicio,
+                        payment.id,
+                        item.title,
+                        item.unit_price,
+                        item.quantity,
+                        payment.date_created
+                    ]);
                 });
+
+                
+
+                // items?.forEach(async (item, index) => {
+                //     const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
+
+                //     //insertar items en payments_items de MP
+                //     await this.databaseService.query(`
+                //         INSERT INTO
+                //             escolar.tb_pp_payments_items
+                //             (
+                //                 payment_id,
+                //                 id_servicio,
+                //                 title,
+                //                 unit_price,
+                //                 quantity,
+                //                 created_at,
+                //                 id_materia,
+                //                 id_servicio_tipo
+                //             )
+                //             values
+                //             (
+                //                 ?,?,?,?,?,?,?,?
+                //             )
+                //         `, [
+                //             payment.id,
+                //             item.id,    
+                //             item.title,
+                //             item.unit_price,
+                //             item.quantity,
+                //             new Date(),
+                //             pi?.id_materia,
+                //             pi?.id_servicio_tipo
+                //         ]);
+                // });
                 
                 if(payment.status == 'approved') {
                     //guardar payment en la base de datos en tabla tb_pagos

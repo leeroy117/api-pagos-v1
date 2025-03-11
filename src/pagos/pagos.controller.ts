@@ -7,7 +7,7 @@ export class PagosController {
 
     }
 
-    @Get('pagos/:id_alumno')
+    @Get(':id_alumno')
     getPagos(@Param('id_alumno') idAlumno: string) {
         const parsedIDAlumno = parseInt(idAlumno);
         return this.pagosService.getPagos(parsedIDAlumno);

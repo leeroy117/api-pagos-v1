@@ -6,7 +6,7 @@ export class PagosService {
     constructor(private readonly databaseService: DatabaseService) { }
 
     async getPagos(idAlumno: number) {
-        const query = 'SELECT * FROM tb_pagos WHERE id = ?';
-        return await this.databaseService.query(query, []);
+        const query = 'call escolar.sp_pp_payments_hist(?)';
+        return await this.databaseService.query(query, [idAlumno]);
     }
 }
