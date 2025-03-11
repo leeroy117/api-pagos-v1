@@ -9,6 +9,7 @@ export class PagosController {
 
     @Get(':id_alumno')
     getPagos(@Param('id_alumno') idAlumno: string) {
+        console.log("🚀 ~ PagosController ~ getPagos ~ idAlumno:", idAlumno)
         const parsedIDAlumno = parseInt(idAlumno);
         return this.pagosService.getPagos(parsedIDAlumno);
     }
