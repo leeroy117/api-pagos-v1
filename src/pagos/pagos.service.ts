@@ -7,6 +7,8 @@ export class PagosService {
 
     async getPagos(idAlumno: number) {
         const query = 'call escolar.sp_pp_payments_hist(?)';
-        return await this.databaseService.query(query, [idAlumno]);
+        const response = await this.databaseService.query(query, [idAlumno]);
+        console.log("🚀 ~ PagosService ~ getPagos ~ response:", response);
+        return response;
     }
 }
