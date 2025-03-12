@@ -188,7 +188,7 @@ export class MercadopagoService {
                     new Date(payment.date_approved || '').toISOString().slice(0, 19).replace("T", " "),
                 ]);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ response: response insert Payment,,,,", response);
-                
+                const paymentIDAG = response[0].id_pp_payment;
 
                 // insertar items en payments_items de MP
                 items?.forEach((item, index) => {
@@ -251,71 +251,124 @@ export class MercadopagoService {
                 //         ]);
                 // });
                 
-                // if(payment.status == 'approved') {
-                //     //guardar payment en la base de datos en tabla tb_pagos
-                //     // sp_pp_pago_insert
-                //     // IN _id_pp_payment BIGINT, 
-                //     // IN _id_alumno BIGINT, 
-                //     // IN _id_servicio BIGINT, 
-                //     // IN _id_servicio_tipo BIGINT, 
-                //     // IN _unit_price decimal(8,2), 
-                //     // IN _date_approved VARCHAR(20)
-                //     const queryInsertPaymentAG = `CALL escolar.sp_pp_pago_insert(?,?,?,?,?,?);`;
-                //     this.databaseService.query(queryInsertPaymentAG, [
+                if(payment.status == 'approved') {
 
-                //     ]);
-                //     //necesito primero consultar en la tb_pp_preferences 
-                //     //el external reference del pago para saber que materia se va a habilitar o 
-                //     // en caso de examen que examen se habilita
-                //     const preferences: Array<TPreferenceAG> = await this.databaseService
-                //         .query(`
-                //             SELECT * from tb_pp_preferences WHERE external_reference = ?`, 
-                //             [payment.external_reference]
-                //         );
+                    items?.forEach(async (item, index) => {
+                        const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
+                        //guardar payment en la base de datos en tabla tb_pagos
+                        // sp_pp_pago_insert
+                        // IN _id_pp_payment BIGINT, 
+                        // IN _id_alumno BIGINT, 
+                        // IN _id_servicio BIGINT, 
+                        // IN _id_servicio_tipo BIGINT, 
+                        // IN _unit_price decimal(8,2), 
+                        // IN _date_approved VARCHAR(20)
+                        const queryInsertPaymentAG = `CALL escolar.sp_pp_pago_insert(?,?,?,?,?,?);`;
+                        this.databaseService.query(queryInsertPaymentAG, [
+                            paymentIDAG,
+                            idAlumno,
+                            item.id,
+                            pi?.id_servicio_tipo,
+                            item.unit_price,
+                            new Date(payment.date_approved || '').toISOString().slice(0, 19).replace("T", " "),
+                        ]);
 
-                //     preferences.forEach(async (preference, index) => {
-                //         // Ejecutar la accion segun el caso 
-                //         // por ejemplo activacion de extraordinario
-                //         switch (preference.id_servicio_tipo) {
+                        switch(pi?.id_servicio_tipo) {
+                            case 2:
+                                    console.log("se ha realizado la inscripcion");
+                                break;
 
-                //             // INSCRIPCIÓN ANUAL
-                //             case 2:
-                //                     console.log("se ha realizado la inscripcion");
-                //                 break;
+                            case 3:
+                                    // IN _id_alumno BIGINT, 
+                                    // IN _id_materia BIGINT
+                                    await this.databaseService.query(`
+                                    CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                        idAlumno,
+                                        pi.id_materia,
+                                    ]);
+                                break;
+
+                            case 12:
+                                    // IN _id_alumno BIGINT, 
+                                    // IN _id_materia BIGINT
+                                    await this.databaseService.query(`
+                                    CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                        idAlumno,
+                                        pi.id_materia,
+                                    ]);
+                                break;
+
+                            default:
+                                    console.log('default switch');
+                                break;
+                        }
+                    });
+                    //guardar payment en la base de datos en tabla tb_pagos
+                    // sp_pp_pago_insert
+                    // IN _id_pp_payment BIGINT, 
+                    // IN _id_alumno BIGINT, 
+                    // IN _id_servicio BIGINT, 
+                    // IN _id_servicio_tipo BIGINT, 
+                    // IN _unit_price decimal(8,2), 
+                    // IN _date_approved VARCHAR(20)
+                    // const queryInsertPaymentAG = `CALL escolar.sp_pp_pago_insert(?,?,?,?,?,?);`;
+                    // this.databaseService.query(queryInsertPaymentAG, [
+                    //     paymentIDAG,
+                    //     idAlumno,
+                        
+                    // ]);
+                    //necesito primero consultar en la tb_pp_preferences 
+                    //el external reference del pago para saber que materia se va a habilitar o 
+                    // en caso de examen que examen se habilita
+                    // const preferences: Array<TPreferenceAG> = await this.databaseService
+                    //     .query(`
+                    //         SELECT * from tb_pp_preferences WHERE external_reference = ?`, 
+                    //         [payment.external_reference]
+                    //     );
+
+                    // preferences.forEach(async (preference, index) => {
+                    //     // Ejecutar la accion segun el caso 
+                    //     // por ejemplo activacion de extraordinario
+                    //     switch (preference.id_servicio_tipo) {
+
+                    //         // INSCRIPCIÓN ANUAL
+                    //         case 2:
+                    //                 console.log("se ha realizado la inscripcion");
+                    //             break;
                             
-                //             // CARGA DE MATERIA
-                //             case 3:
-                //                     // console.log("se ha realizado la carga de materia")
-                //                     // IN _id_alumno BIGINT, 
-                //                     // IN _id_materia BIGINT
-                //                     await this.databaseService.query(`
-                //                         CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
-                //                             idAlumno,
-                //                             preference.id_materia,
-                //                         ]);
-                //                 break;
+                    //         // CARGA DE MATERIA
+                    //         case 3:
+                    //                 // console.log("se ha realizado la carga de materia")
+                    //                 // IN _id_alumno BIGINT, 
+                    //                 // IN _id_materia BIGINT
+                    //                 await this.databaseService.query(`
+                    //                     CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                    //                         idAlumno,
+                    //                         preference.id_materia,
+                    //                     ]);
+                    //             break;
 
-                //             // ACTIVACION EXTRAORDINARIO
-                //             case 12:
-                //                 // sp_pp_servicio_extraordinario
-                //                     // console.log("se ha realizado la activacion de extraordinario")
-                //                     // IN _id_alumno BIGINT, 
-                //                     // IN _id_materia BIGINT
-                //                     await this.databaseService.query(`
-                //                         CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
-                //                             idAlumno,
-                //                             preference.id_materia,
-                //                         ]);
-                //                 break;
+                    //         // ACTIVACION EXTRAORDINARIO
+                    //         case 12:
+                    //             // sp_pp_servicio_extraordinario
+                    //                 // console.log("se ha realizado la activacion de extraordinario")
+                    //                 // IN _id_alumno BIGINT, 
+                    //                 // IN _id_materia BIGINT
+                    //                 await this.databaseService.query(`
+                    //                     CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                    //                         idAlumno,
+                    //                         preference.id_materia,
+                    //                     ]);
+                    //             break;
                             
-                //             default:
-                //                 break;
-                //         } 
-                //     });
+                    //         default:
+                    //             break;
+                    //     } 
+                    // });
                     
-                //     //
+                    //
 
-                // }
+                }
                 // return payment;
             }
 
