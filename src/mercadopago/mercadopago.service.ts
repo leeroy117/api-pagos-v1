@@ -188,7 +188,7 @@ export class MercadopagoService {
                     new Date(payment.date_approved || '').toISOString().slice(0, 19).replace("T", " "),
                 ]);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ response: response insert Payment,,,,", response);
-                const paymentIDAG = response[0].id_pp_payment;
+                const paymentIDAG = response[0][0].id_pp_payment;
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ paymentIDAG:", paymentIDAG)
 
                 // insertar items en payments_items de MP
