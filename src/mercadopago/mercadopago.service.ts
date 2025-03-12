@@ -202,7 +202,7 @@ export class MercadopagoService {
                             // IN _unit_price decimal(8,2), 
                             // IN _date_approved VARCHAR(20)
                             const queryInsertPaymentAG = `CALL escolar.sp_pp_pago_insert(?,?,?,?,?,?);`;
-                            await this.databaseService.query(queryInsertPaymentAG, [
+                            const responseInsertPagoAG = await this.databaseService.query(queryInsertPaymentAG, [
                                 paymentIDAG,
                                 idAlumno,
                                 item.id,
@@ -210,6 +210,7 @@ export class MercadopagoService {
                                 item.unit_price,
                                 new Date(payment.date_approved || '').toISOString().slice(0, 19).replace("T", " "),
                             ]);
+                            console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertPagoAG:", responseInsertPagoAG)
     
                             switch(pi?.id_servicio_tipo) {
                                 case 2:
