@@ -189,9 +189,10 @@ export class MercadopagoService {
                 ]);
                 console.log("🚀 ~ MercadopagoService ~ listenEvents ~ response: response insert Payment,,,,", response);
                 const paymentIDAG = response[0].id_pp_payment;
+                console.log("🚀 ~ MercadopagoService ~ listenEvents ~ paymentIDAG:", paymentIDAG)
 
                 // insertar items en payments_items de MP
-                items?.forEach((item, index) => {
+                items?.forEach(async(item, index) => {
                     const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
                     // IN _id_alumno BIGINT, 
                     // IN _id_servicio BIGINT, 
@@ -203,7 +204,7 @@ export class MercadopagoService {
                     // IN _quantity INT, 
                     // IN _created_at VARCHAR(20)
                     const queryInsertItemsPayment = `CALL escolar.sp_pp_item_insert(?,?,?,?,?,?,?,?,?);`;
-                    this.databaseService.query(queryInsertItemsPayment, [
+                    await this.databaseService.query(queryInsertItemsPayment, [
                         idAlumno,
                         item.id,
                         pi?.id_materia,
@@ -264,7 +265,7 @@ export class MercadopagoService {
                         // IN _unit_price decimal(8,2), 
                         // IN _date_approved VARCHAR(20)
                         const queryInsertPaymentAG = `CALL escolar.sp_pp_pago_insert(?,?,?,?,?,?);`;
-                        this.databaseService.query(queryInsertPaymentAG, [
+                        await this.databaseService.query(queryInsertPaymentAG, [
                             paymentIDAG,
                             idAlumno,
                             item.id,
@@ -281,21 +282,23 @@ export class MercadopagoService {
                             case 3:
                                     // IN _id_alumno BIGINT, 
                                     // IN _id_materia BIGINT
-                                    await this.databaseService.query(`
-                                    CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
-                                        idAlumno,
-                                        pi.id_materia,
-                                    ]);
+                                    // await this.databaseService.query(`
+                                    // CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                    //     idAlumno,
+                                    //     pi.id_materia,
+                                    // ]);
+                                    console.log("se ha realizado la carga de materia");
                                 break;
 
                             case 12:
                                     // IN _id_alumno BIGINT, 
                                     // IN _id_materia BIGINT
-                                    await this.databaseService.query(`
-                                    CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
-                                        idAlumno,
-                                        pi.id_materia,
-                                    ]);
+                                    // await this.databaseService.query(`
+                                    // CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                    //     idAlumno,
+                                    //     pi.id_materia,
+                                    // ]);
+                                    console.log("se ha realizado el pago de extraordinario");
                                 break;
 
                             default:
