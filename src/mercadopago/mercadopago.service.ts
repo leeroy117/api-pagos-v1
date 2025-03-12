@@ -170,8 +170,9 @@ export class MercadopagoService {
                 // IN _date_approved VARCHAR(20)
 
                 // insertar payment cteado en la tabla de payments de mp
+                // regresa id payment para usarlo en sp_pp_pago_insert
                 const queryInsertPayment = `CALL escolar.sp_pp_payments_insert(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-                this.databaseService.query(queryInsertPayment, [
+                const response = this.databaseService.query(queryInsertPayment, [
                     idAlumno,
                     payment.id,
                     payment.external_reference,
@@ -183,31 +184,30 @@ export class MercadopagoService {
                     payment.payment_method_id,
                     payment.payment_type_id,
                     new Date(payment.date_created || '').toISOString().slice(0, 19).replace("T", " "),
-                    // new Date(),
-                    // payment.date_last_updated,
                     new Date(payment.date_last_updated || '').toISOString().slice(0, 19).replace("T", " "),
                     new Date(payment.date_approved || '').toISOString().slice(0, 19).replace("T", " "),
-                    // payment.date_approved,
-                ])
+                ]);
+                console.log("🚀 ~ MercadopagoService ~ listenEvents ~ response: response insert Payment,,,,", response);
+                
 
                 // insertar items en payments_items de MP
                 items?.forEach((item, index) => {
                     const pi = preferencesItems.find(pi => pi.id_servicio == parseInt(item.id));
-                    // IN _id_pp_payment BIGINT, 
                     // IN _id_alumno BIGINT, 
-                    // IN _id_materia BIGINT,
                     // IN _id_servicio BIGINT, 
+                    // IN _id_materia BIGINT, 
+                    // IN _id_servicio_tipo BIGINT,  
                     // IN _payment_id BIGINT, 
                     // IN _title VARCHAR(255), 
                     // IN _unit_price decimal(8,2), 
                     // IN _quantity INT, 
                     // IN _created_at VARCHAR(20)
-                    const queryInsertItemsPayment = `CALL escolar.sp_pp_items_insert(?,?,?,?,?,?,?,?,?);`;
+                    const queryInsertItemsPayment = `CALL escolar.sp_pp_item_insert(?,?,?,?,?,?,?,?,?);`;
                     this.databaseService.query(queryInsertItemsPayment, [
-                        payment.id,
                         idAlumno,
+                        item.id,
                         pi?.id_materia,
-                        pi?.id_servicio,
+                        pi?.id_servicio_tipo,
                         payment.id,
                         item.title,
                         item.unit_price,
@@ -253,7 +253,17 @@ export class MercadopagoService {
                 
                 if(payment.status == 'approved') {
                     //guardar payment en la base de datos en tabla tb_pagos
-                    
+                    // sp_pp_pago_insert
+                    // IN _id_pp_payment BIGINT, 
+                    // IN _id_alumno BIGINT, 
+                    // IN _id_servicio BIGINT, 
+                    // IN _id_servicio_tipo BIGINT, 
+                    // IN _unit_price decimal(8,2), 
+                    // IN _date_approved VARCHAR(20)
+                    const queryInsertPaymentAG = `CALL escolar.sp_pp_pago_insert(?,?,?,?,?,?);`;
+                    this.databaseService.query(queryInsertPaymentAG, [
+
+                    ]);
                     //necesito primero consultar en la tb_pp_preferences 
                     //el external reference del pago para saber que materia se va a habilitar o 
                     // en caso de examen que examen se habilita
@@ -263,7 +273,7 @@ export class MercadopagoService {
                             [payment.external_reference]
                         );
 
-                    preferences.forEach((preference, index) => {
+                    preferences.forEach(async (preference, index) => {
                         // Ejecutar la accion segun el caso 
                         // por ejemplo activacion de extraordinario
                         switch (preference.id_servicio_tipo) {
@@ -275,12 +285,27 @@ export class MercadopagoService {
                             
                             // CARGA DE MATERIA
                             case 3:
-                                    console.log("se ha realizado la carga de materia")
+                                    // console.log("se ha realizado la carga de materia")
+                                    // IN _id_alumno BIGINT, 
+                                    // IN _id_materia BIGINT
+                                    await this.databaseService.query(`
+                                        CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                            idAlumno,
+                                            preference.id_materia,
+                                        ]);
                                 break;
 
                             // ACTIVACION EXTRAORDINARIO
                             case 12:
-                                    console.log("se ha realizado la activacion de extraordinario")
+                                // sp_pp_servicio_extraordinario
+                                    // console.log("se ha realizado la activacion de extraordinario")
+                                    // IN _id_alumno BIGINT, 
+                                    // IN _id_materia BIGINT
+                                    await this.databaseService.query(`
+                                        CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                            idAlumno,
+                                            preference.id_materia,
+                                        ]);
                                 break;
                             
                             default:
