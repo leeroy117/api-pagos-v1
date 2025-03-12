@@ -204,7 +204,7 @@ export class MercadopagoService {
                     // IN _quantity INT, 
                     // IN _created_at VARCHAR(20)
                     const queryInsertItemsPayment = `CALL escolar.sp_pp_item_insert(?,?,?,?,?,?,?,?,?);`;
-                    await this.databaseService.query(queryInsertItemsPayment, [
+                    const responseInsertItems = await this.databaseService.query(queryInsertItemsPayment, [
                         idAlumno,
                         item.id,
                         pi?.id_materia,
@@ -215,6 +215,7 @@ export class MercadopagoService {
                         item.quantity,
                         new Date(payment.date_created || '').toISOString().slice(0, 19).replace("T", " "),
                     ]);
+                    console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertItems:", responseInsertItems)
                 });
 
                 
