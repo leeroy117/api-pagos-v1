@@ -172,7 +172,7 @@ export class MercadopagoService {
                 // insertar payment cteado en la tabla de payments de mp
                 // regresa id payment para usarlo en sp_pp_pago_insert
                 const queryInsertPayment = `CALL escolar.sp_pp_payments_insert(?,?,?,?,?,?,?,?,?,?,?,?,?)`;
-                const response = this.databaseService.query(queryInsertPayment, [
+                const response = await this.databaseService.query(queryInsertPayment, [
                     idAlumno,
                     payment.id,
                     payment.external_reference,
@@ -212,7 +212,7 @@ export class MercadopagoService {
                         item.title,
                         item.unit_price,
                         item.quantity,
-                        payment.date_created
+                        new Date(payment.date_created || '').toISOString().slice(0, 19).replace("T", " "),
                     ]);
                 });
 
