@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException } from '@nestjs/common';
 import { CreatePreferenceCheckoutPro } from './dto/CreatePreferenceCheckoutProDto';
 import { createId } from '@paralleldrive/cuid2';
-import { PreferenceRequest } from 'mercadopago/dist/clients/preference/commonTypes';
+import { PreferenceRequest, PreferenceResponse } from 'mercadopago/dist/clients/preference/commonTypes';
 import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create/types';
 import MercadoPagoConfig, { Preference, Payment } from 'mercadopago';
 import { PaymentGetData } from 'mercadopago/dist/clients/payment/get/types';
@@ -76,7 +76,7 @@ export class MercadopagoService {
 
         const preference = new Preference(this.client);
 
-        const response = await preference.create(preferenceCreateData);
+        const response: PreferenceResponse = await preference.create(preferenceCreateData);
         console.log("🚀 ~ MercadoPagoService ~ returnnewPromise ~ response:", response);
 
         items.forEach(async (item,index)=> {
