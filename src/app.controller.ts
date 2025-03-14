@@ -3,15 +3,22 @@ import { AppService } from './app.service';
 
 @Controller()
 export class AppController {
-  constructor(private readonly appService: AppService) {}
+  constructor(
+    private readonly appService: AppService,
+  ) {}
 
-  @Get()
-  getHello(): string {
-    return this.appService.getHello();
+  @Get('check-status')
+  getHello()  {
+    // return this.appService.getHello();
+    // return this.health.check([
+    //   async () => this.http.pingCheck('google', 'https://www.google.com'), // Checa si Google está disponible
+    //   async () => this.db.pingCheck('database'), // Checa conexión a la BD (TypeORM)
+    // ]);
+   
   }
 
-  @Get('version')
-  getVersion() {
-    return this.appService.getDatabase();
-  }
+  // @Get('version')
+  // getVersion() {
+  //   return this.appService.getDatabase();
+  // }
 }

@@ -213,29 +213,34 @@ export class MercadopagoService {
                             console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertPagoAG:", responseInsertPagoAG)
     
                             switch(pi?.id_servicio_tipo) {
+                                // Inscripcion
                                 case 2:
                                         console.log("se ha realizado la inscripcion");
                                     break;
     
+                                // Carga materia
                                 case 3:
                                         // IN _id_alumno BIGINT, 
                                         // IN _id_materia BIGINT
-                                        // await this.databaseService.query(`
-                                        // CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
-                                        //     idAlumno,
-                                        //     pi.id_materia,
-                                        // ]);
+                                        const responseCargaMateria = await this.databaseService.query(`
+                                            CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                            idAlumno,
+                                            pi.id_materia,
+                                        ]);
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseCargaMateria:", responseCargaMateria)
                                         console.log("se ha realizado la carga de materia");
                                     break;
-    
+                                
+                                // Extraordinario
                                 case 12:
                                         // IN _id_alumno BIGINT, 
                                         // IN _id_materia BIGINT
-                                        // await this.databaseService.query(`
-                                        // CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
-                                        //     idAlumno,
-                                        //     pi.id_materia,
-                                        // ]);
+                                        const responseExtraordinario = await this.databaseService.query(`
+                                            CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                            idAlumno,
+                                            pi.id_materia,
+                                        ]);
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseExtraordinario:", responseExtraordinario);
                                         console.log("se ha realizado el pago de extraordinario");
                                     break;
     
