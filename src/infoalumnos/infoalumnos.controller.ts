@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Version } from '@nestjs/common';
 import { InfoalumnosService } from './infoalumnos.service';
 import { ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetStatusInscripcionDto } from './dto/GetStatusInscripcionDto';
@@ -9,6 +9,7 @@ export class InfoalumnosController {
 
     constructor(private readonly infoalumnosService: InfoalumnosService) {}
 
+    @Version('1')
     @ApiOperation({ summary: 'Consulta el estatus de inscripcion de un alumno' })
     @ApiResponse({ 
             status: 200,  

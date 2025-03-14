@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Version } from '@nestjs/common';
 import { CreatePreferenceCheckoutPro } from './dto/CreatePreferenceCheckoutProDto';
 import { MercadopagoService } from './mercadopago.service';
 import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -11,7 +11,7 @@ export class MercadopagoController {
 
     constructor(private readonly mercadopagoService: MercadopagoService) {}
 
-
+    @Version('1')
     @ApiOperation({ summary: 'Crea una preferencia en mercado pago que sirve para poder pagar.' })
     @ApiCreatedResponse({  description: 'Se devuelve el objeto regresado por mercado pago el cual contiene el init_point, que es necesario para generar la ventana de pago', example: paymentPreference })
     @HttpCode(201)

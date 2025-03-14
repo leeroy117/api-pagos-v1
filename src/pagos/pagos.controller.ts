@@ -1,4 +1,4 @@
-import { Controller, Get, Param, Query } from '@nestjs/common';
+import { Controller, Get, Param, Query, Version } from '@nestjs/common';
 import { PagosService } from './pagos.service';
 import { ApiExtraModels, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { GetPagosByAlumnoDto } from './dto/GetPagosByAlumnoDto';
@@ -9,6 +9,7 @@ import { pagosHistResponse } from './examples/pagosHistResponse';
 export class PagosController {
     constructor(private readonly pagosService: PagosService) {}
 
+    @Version('1')
     @Get('/')
     @ApiExtraModels(GetPagosByAlumnoDto)
     @ApiOperation({  summary: 'Consulta el historial de pagos de un alumno, cada pago contiene los items que fueron agregados en el pago' })
