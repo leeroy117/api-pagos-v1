@@ -25,6 +25,8 @@ async function bootstrap() {
   app.enableVersioning({
     type: VersioningType.URI,
   });
+
+  app.enableCors();
   await app.listen(process.env.PORT ?? 58999);
 }
 bootstrap();

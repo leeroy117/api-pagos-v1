@@ -217,7 +217,14 @@ export class MercadopagoService {
                                 case 2:
                                         console.log("se ha realizado la inscripcion");
                                     break;
-    
+
+                                // kardex
+                                case 4: 
+
+                                    break;
+                                
+                                
+
                                 // Carga materia
                                 case 3:
                                         // IN _id_alumno BIGINT, 
@@ -229,6 +236,11 @@ export class MercadopagoService {
                                         ]);
                                         console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseCargaMateria:", responseCargaMateria)
                                         console.log("se ha realizado la carga de materia");
+                                    break;
+
+                                // Certificado parcial
+                                case 6: 
+                                        console.log("se ha registrado el certificado parcial");
                                     break;
                                 
                                 // Extraordinario
@@ -242,6 +254,11 @@ export class MercadopagoService {
                                         ]);
                                         console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseExtraordinario:", responseExtraordinario);
                                         console.log("se ha realizado el pago de extraordinario");
+                                    break;
+
+                                // CREDENCIAL
+                                case 13: 
+                                        console.log("se ha registrado la Credencial de estudiante");
                                     break;
     
                                 default:
