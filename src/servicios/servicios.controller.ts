@@ -15,7 +15,7 @@ export class ServiciosController {
     @ApiResponse({ 
         status: 200, 
         example: serviciosResponse , 
-        description: 'Regresa un listado de servicio que contiene id, nombre y precio del servicio' })
+        description: 'Regresa un listado de servicio que contiene id, nombre, precio del servicio, tipo de servicio, porcentaje de descuento' })
     @ApiResponse({ 
         status: 400, 
         example: serviciosBadRequestResponse , 

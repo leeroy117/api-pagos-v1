@@ -221,10 +221,11 @@ export class MercadopagoService {
                                 // kardex
                                 case 4: 
 
+                                        const responseInsertDocsCEKardex = await this.databaseService.query(`
+                                        CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCEKardex:", responseInsertDocsCEKardex)
                                     break;
                                 
-                                
-
                                 // Carga materia
                                 case 3:
                                         // IN _id_alumno BIGINT, 
@@ -240,6 +241,10 @@ export class MercadopagoService {
 
                                 // Certificado parcial
                                 case 6: 
+                                        const responseInsertDocsCECP = await this.databaseService.query(`
+                                            CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCECP:", responseInsertDocsCECP)
+
                                         console.log("se ha registrado el certificado parcial");
                                     break;
                                 
@@ -259,6 +264,9 @@ export class MercadopagoService {
                                 // CREDENCIAL
                                 case 13: 
                                         console.log("se ha registrado la Credencial de estudiante");
+                                        const responseInsertDocsCECredencial = await this.databaseService.query(`
+                                            CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCECredencial:", responseInsertDocsCECredencial)
                                     break;
     
                                 default:

@@ -1,16 +1,28 @@
 export const serviciosResponse = [
     {
         "id": 64,
-        "nombre": "Inscripción de Prepa Coppel 2020"
+        "nombre": "Inscripción de Prepa Coppel 2020",
+        "id_tipo": 2,
+        "monto": 190,
+        "porcentaje_descuento": 0,
+        "req_doc_ce": 0
     },
     {
         "id": 65,
-        "nombre": "Pago por materia Prepa Coppel 2020"
+        "nombre": "Pago por materia Prepa Coppel 2020",
+        "id_tipo": 3,
+        "monto": 380,
+        "porcentaje_descuento": 0,
+        "req_doc_ce": 0
     },
     {
-        "id": 490,
-        "nombre": "Pago de Examen Extraordinario"
-    }
+        "id": 123,
+        "nombre": "CERTIFICADO",
+        "id_tipo": 5,
+        "monto": 0,
+        "porcentaje_descuento": 0,
+        "req_doc_ce": 1
+    },
 ]
 
 export const serviciosBadRequestResponse = {
