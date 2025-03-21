@@ -218,14 +218,6 @@ export class MercadopagoService {
                                         console.log("se ha realizado la inscripcion");
                                     break;
 
-                                // kardex
-                                case 4: 
-
-                                        const responseInsertDocsCEKardex = await this.databaseService.query(`
-                                        CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
-                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCEKardex:", responseInsertDocsCEKardex)
-                                    break;
-                                
                                 // Carga materia
                                 case 3:
                                         // IN _id_alumno BIGINT, 
@@ -237,16 +229,31 @@ export class MercadopagoService {
                                         ]);
                                         console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseCargaMateria:", responseCargaMateria)
                                         console.log("se ha realizado la carga de materia");
-                                    break;
+                                break;
 
-                                // Certificado parcial
-                                case 6: 
-                                        const responseInsertDocsCECP = await this.databaseService.query(`
+                                // Certificado 
+                                case 5: 
+                                        const responseInsertDocsCECertificado = await this.databaseService.query(`
                                             CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
-                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCECP:", responseInsertDocsCECP)
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCECertificado:", responseInsertDocsCECertificado)
 
-                                        console.log("se ha registrado el certificado parcial");
+                                        console.log("se ha registrado el certificado ");
                                     break;
+
+                                     // constancia
+                                case 6: 
+                                     const responseInsertDocsCEConstancia = await this.databaseService.query(`
+                                         CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
+                                     console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCEConstancia:", responseInsertDocsCEConstancia)
+
+                                break;
+
+                                // kardex
+                                case 7: 
+                                        const responseInsertDocsCEKardex = await this.databaseService.query(`
+                                        CALL escolar.sp_pp_servicio_doc_ce(?,?);`, [paymentIDAG, idAlumno]);
+                                        console.log("🚀 ~ MercadopagoService ~ items?.forEach ~ responseInsertDocsCEKardex:", responseInsertDocsCEKardex)
+                                break;
                                 
                                 // Extraordinario
                                 case 12:
