@@ -21,7 +21,7 @@ export const pagosHistResponse = {
                     "id_servicio_tipo": 5,
                     "servicio_tipo": "CERTIFICADO",
                     "created_at": "2025-03-22T04:09:13.000Z",
-                    "docCEInfo": {
+                    "doc_ce_info": {
                         "id_estatus_docs_ce": 1,
                         "payment_id": 1333644127,
                         "external_reference": "148147_123__gfyvfhx3er94v161sm0o8rvy",
@@ -46,7 +46,7 @@ export const pagosHistResponse = {
                     "id_servicio_tipo": 6,
                     "servicio_tipo": "CONSTANCIA ESTUDIOS",
                     "created_at": "2025-03-22T04:09:13.000Z",
-                    "docCEInfo": {
+                    "doc_ce_info": {
                         "id_estatus_docs_ce": 1,
                         "payment_id": 1333643539,
                         "external_reference": "148147_123-132__g1tsaqvk9cqbjt9pr6ud7l4e",
@@ -82,7 +82,7 @@ export const pagosHistResponse = {
                     "id_servicio_tipo": 3,
                     "servicio_tipo": "CARGA DE MATERIA",
                     "created_at": "2025-03-21T04:57:43.000Z",
-                    "docCEInfo": null
+                    "doc_ce_info": null
                 }
             ]
         },
