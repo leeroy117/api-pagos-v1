@@ -26,7 +26,7 @@ export class PagosController {
         // console.log("🚀 ~ PagosController ~ getPagos ~ idAlumno:", idAlumno)
         // const parsedIDAlumno = parseInt(idAlumno);
         const response = await this.pagosService.getPagos(queryParamsPagos);
-        console.log("🚀 ~ PagosController ~ getPagos ~ response:", response)
+        // console.log("🚀 ~ PagosController ~ getPagos ~ response:", response)
         return response
     }
 }

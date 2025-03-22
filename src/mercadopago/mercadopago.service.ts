@@ -223,7 +223,7 @@ export class MercadopagoService {
                                         // IN _id_alumno BIGINT, 
                                         // IN _id_materia BIGINT
                                         const responseCargaMateria = await this.databaseService.query(`
-                                            CALL escolar.sp_pp_servicio_extraordinario(?,?);`, [
+                                            CALL escolar.sp_pp_servicio_carga(?,?);`, [
                                             idAlumno,
                                             pi.id_materia,
                                         ]);

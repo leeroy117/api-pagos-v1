@@ -46,6 +46,8 @@ export class DatabaseService {
             port: 22,
             privateKey: fs.readFileSync('./dtmomejia.pem'),
             passphrase: 'u#/vsSy2QWBltvmIxOXIUGVxA6CDghpI6mR3pUoQEUiOGyPXukYVK+qFxDFo',
+            keepaliveInterval: 15000,
+            keepaliveCountMax: 10  
         };
     
         return new Promise( (resolve, reject) => {

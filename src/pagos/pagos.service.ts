@@ -28,6 +28,19 @@ type TPayment = {
     items: TItem[];
 }
 
+type TDocCE = {
+    id_estatus_docs_ce: number;
+    payment_id: number;
+    external_reference: string;
+    title: string;
+    id_servicio_tipo: number;
+    id_servicio: number;
+    id_materia: number;
+    estatus: string;
+    font_color: string;
+    id: number;
+  }
+
 @Injectable()
 export class PagosService {
     constructor(private readonly databaseService: DatabaseService) { }
@@ -41,12 +54,21 @@ export class PagosService {
 
             const query = 'CALL escolar.sp_pp_payments_hist(?,?,?);';
             const response = await this.databaseService.query(query, [idAlumno, limit, page]);
+            // console.log("🚀 ~ PagosService ~ getPagos ~ response:", response)
             const payments: Array<TPayment> = response[0];
             const items: Array<TItem> = response[1];
             const total: number = response[2][0].total; 
+            const itemsDocsCE: Array<TDocCE> = response[3];
+            console.log("🚀 ~ PagosService ~ getPagos ~ itemsDocsCE:", itemsDocsCE)
     
             const paymentsWithItems = payments.map((payment, index) => {
-                const filteredItems = items.filter((itemFilter, index) => itemFilter.payment_id == payment.payment_id);
+                const filteredItems = 
+                    items.filter((itemFilter, index) => itemFilter.payment_id == payment.payment_id)
+                    .map((item) => ({
+                        ...item,
+                        doc_ce_info: itemsDocsCE.find(doc => doc.id_servicio == item.id_servicio) ?? null
+                    }));
+
     
                 return {
                     ...payment,
