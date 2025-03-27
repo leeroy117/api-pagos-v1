@@ -32,7 +32,7 @@ type TPreferenceAG = {
 @Injectable()
 export class MercadopagoService {
     client: MercadoPagoConfig;
-    accessToken = 'APP_USR-1819459043832827-022615-69df729b62be9c09769cb69f8668113a-2292996564';
+    accessToken = 'APP_USR-685231143478605-032716-fc9650b6eed0a8ea2ade09f8978ca9ef-2325182738';
 
     constructor(private databaseService: DatabaseService){
         this.client = new MercadoPagoConfig({ accessToken: this.accessToken, options: {testToken: true, } });
