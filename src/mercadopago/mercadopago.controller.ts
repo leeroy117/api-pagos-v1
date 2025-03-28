@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, Param, Post, Version } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, Param, Post, Query, Version } from '@nestjs/common';
 import { CreatePreferenceCheckoutPro } from './dto/CreatePreferenceCheckoutProDto';
 import { MercadopagoService } from './mercadopago.service';
 import { ApiCreatedResponse, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
@@ -35,9 +35,19 @@ export class MercadopagoController {
         return this.mercadopagoService.getPaymentDetails(paymentId);
     }
 
-    @ApiExcludeEndpoint()
+    // @ApiExcludeEndpoint()
+    @Version('1')
     @Get('payments/search')
-    async getPayments() {
-        return this.mercadopagoService.searchPayment();
+    async getPayments(@Query('external_reference') externalReference:  string) {
+        console.log("🚀 ~ MercadopagoController ~ getPayments ~ externalReference:", externalReference);
+        const response = await this.mercadopagoService.searchPayment(externalReference);
+        return response;
+    }
+
+    @Version('1')
+    @Get('payments/fallback/:external_reference') 
+    async fallbackPayment(@Param('external_reference') externalReference: string) {
+        const response = await this.mercadopagoService.fallbackPayment(externalReference);
+        return response;
     }
 }
