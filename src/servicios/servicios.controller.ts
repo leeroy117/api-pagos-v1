@@ -26,7 +26,7 @@ export class ServiciosController {
         description: 'Ocurrio un error inesperado al procesar la solicitud.' })
     @Get()
     async getServiciosV1(@Query() data: GetServiciosDto) {
-        console.log("🚀 ~ ServiciosController ~ getServicios ~ data:", data)
+        // console.log("🚀 ~ ServiciosController ~ getServicios ~ data:", data)
         const { id_plan_estudio: idPlanEstudio  } = data;
         return this.serviciosService.getServicios(idPlanEstudio);
     }

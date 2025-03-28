@@ -99,7 +99,7 @@ export class MercadopagoService {
     async listenEvents(body: TEvent) {
         try {
             if(body.type == 'payment'){
-                if(body.action == 'payment.created'){
+                if(body.action == 'payment.created') {
                     const payment = await this.getPaymentDetails(body.data.id);
                     console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)
                     
@@ -293,42 +293,58 @@ export class MercadopagoService {
 
 
     async getPaymentDetails(paymentId: string) {
-        
-        console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId);
-        const payment = new Payment(this.client);
-        // const requestOptions: PaymentGetData = {
-        //     id: paymentId,
-        //     requestOptions: {
-        //         testToken: true,
-        //         idempotencyKey: ''
-        //     }
-        // }
-        const response = await payment.get({id: paymentId, requestOptions: {timeout: 15}});
-        return response;
+        try {
+            console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId);
+            const payment = new Payment(this.client);
+            // const requestOptions: PaymentGetData = {
+            //     id: paymentId,
+            //     requestOptions: {
+            //         testToken: true,
+            //         idempotencyKey: ''
+            //     }
+            // }
+            const response = await payment.get({id: paymentId, requestOptions: {timeout: 15}});
+            return response;
+            
+        } catch (error) {
+            console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ error_____:", error)
+            throw new InternalServerErrorException("Error al obtener payment details");
+            // return null;
+        }
     }
 
     async searchPayment(externalReference: string){
-        console.log("🚀 ~ MercadopagoService ~ searchPayment ~ externalReference:", externalReference)
-        const payment = new Payment(this.client);
-
-        const response = await payment.search(
-            {
-            options: {
-                sort: 'date_approved',
-                criteria: 'desc',
-                external_reference: externalReference,
-                // range: '',
-                begin_date: 'NOW-30DAYS',
-                end_date: 'NOW',
-
-            },
-            requestOptions: {
-                // testToken: true,
-                timeout: 15
-            }
-        });
-        console.log("🚀 ~ MercadopagoService ~ searchPayment ~ response:", response)
-        return response;
+        try {
+            console.log("🚀 ~ MercadopagoService ~ searchPayment ~ externalReference:", externalReference)
+            const payment = new Payment(this.client);
+    
+            const response = await payment.search(
+                {
+                options: {
+                    sort: 'date_approved',
+                    criteria: 'desc',
+                    external_reference: externalReference,
+                    // range: '',
+                    begin_date: 'NOW-30DAYS',
+                    end_date: 'NOW',
+    
+                },
+                requestOptions: {
+                    // testToken: true,
+                    // timeout: 1
+    
+                }
+            });
+            console.log("🚀 ~ MercadopagoService ~ searchPayment ~ response:", response)
+            return response;
+            
+        } catch (error) {
+            console.log("🚀 ~ MercadopagoService ~ searchPayment ~ error:", error)
+            throw new InternalServerErrorException("Error al buscar pago en MercadoPago");
+        }
+        // return setTimeout(async () => {
+            
+        // }, 5000)
     }
 
     async fallbackPayment(externalReference: string){
