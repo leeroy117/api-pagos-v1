@@ -36,7 +36,7 @@ export class MercadopagoService {
     accessToken = 'APP_USR-685231143478605-032716-fc9650b6eed0a8ea2ade09f8978ca9ef-2325182738';
 
     constructor(private databaseService: DatabaseService){
-        this.client = new MercadoPagoConfig({ accessToken: this.accessToken, options: { } });
+        this.client = new MercadoPagoConfig({ accessToken: this.accessToken });
     }
 
     async createPreference(preferenceData: CreatePreferenceCheckoutPro) {
@@ -303,7 +303,7 @@ export class MercadopagoService {
         //         idempotencyKey: ''
         //     }
         // }
-        const response = await payment.get({id: paymentId, requestOptions: {}});
+        const response = await payment.get({id: paymentId, requestOptions: {timeout: 15}});
         return response;
     }
 
@@ -324,7 +324,7 @@ export class MercadopagoService {
             },
             requestOptions: {
                 // testToken: true,
-
+                timeout: 15
             }
         });
         console.log("🚀 ~ MercadopagoService ~ searchPayment ~ response:", response)
