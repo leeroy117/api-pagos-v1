@@ -301,7 +301,8 @@ export class MercadopagoService {
     async getPaymentDetails(paymentId: string | number) {
         try {
             console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId);
-            const payment = new Payment(this.client);
+            const client  = new MercadoPagoConfig({ accessToken: this.accessToken, options: {timeout: 15000 } });
+            const payment = new Payment(client);
             // const requestOptions: PaymentGetData = {
             //     id: paymentId,
             //     requestOptions: {
@@ -309,7 +310,7 @@ export class MercadopagoService {
             //         idempotencyKey: ''
             //     }
             // }
-            const response = await payment.get({id: paymentId, requestOptions: { timeout: 15000 }});
+            const response = await payment.get({id: paymentId});
             return response;
             
         } catch (error) {
