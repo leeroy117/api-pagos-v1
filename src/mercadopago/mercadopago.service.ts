@@ -323,7 +323,8 @@ export class MercadopagoService {
     async searchPayment(externalReference: string){
         try {
             console.log("🚀 ~ MercadopagoService ~ searchPayment ~ externalReference:", externalReference)
-            const payment = new Payment(this.client);
+            const client  = new MercadoPagoConfig({ accessToken: this.accessToken, options: {timeout: 15000 } });
+            const payment = new Payment(client);
     
             const response = await payment.search(
                 {
