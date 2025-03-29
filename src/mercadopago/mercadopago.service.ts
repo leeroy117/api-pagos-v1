@@ -98,7 +98,7 @@ export class MercadopagoService {
 
     async listenEvents(body: TEvent) {
         console.log("🚀 ~ MercadopagoService ~ listenEvents ~ body:", body)
-        setTimeout(async () => {
+        // setTimeout(async () => {
             try {
                 if(body.type == 'payment'){
                     if(body.action == 'payment.created' || body.action == 'payment.updated') {
@@ -289,7 +289,7 @@ export class MercadopagoService {
                 throw new InternalServerErrorException(e)
             }
 
-        }, 5000)
+        // }, 5000)
 
         
         
