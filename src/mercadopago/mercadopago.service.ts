@@ -308,7 +308,7 @@ export class MercadopagoService {
             //         idempotencyKey: ''
             //     }
             // }
-            const response = await payment.get({id: paymentId});
+            const response = await payment.get({id: paymentId, requestOptions: { timeout: 15000 }});
             return response;
             
         } catch (error) {
