@@ -97,10 +97,12 @@ export class MercadopagoService {
     }
 
     async listenEvents(body: TEvent) {
+        console.log("🚀 ~ MercadopagoService ~ listenEvents ~ body:", body)
         try {
             if(body.type == 'payment'){
                 if(body.action == 'payment.created') {
-                    const payment = await this.getPaymentDetails(body.data.id);
+                    const paymentIdNotification: string = body.data.id;
+                    const payment = await this.getPaymentDetails(parseInt(paymentIdNotification) );
                     console.log("🚀 ~ MercadopagoService ~ listenEvents ~ payment:", payment)
                     
                     const preferencesItems: Array<TPreferenceAG> = await this.databaseService
@@ -292,7 +294,7 @@ export class MercadopagoService {
 
 
 
-    async getPaymentDetails(paymentId: string) {
+    async getPaymentDetails(paymentId: string | number) {
         try {
             console.log("🚀 ~ MercadopagoService ~ getPaymentDetails ~ paymentId:", paymentId);
             const payment = new Payment(this.client);
