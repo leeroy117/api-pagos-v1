@@ -101,7 +101,8 @@ export class MercadopagoService {
         // setTimeout(async () => {
             try {
                 if(body.type == 'payment'){
-                    if(body.action == 'payment.created' || body.action == 'payment.updated') {
+                    // if(body.action == 'payment.created' || body.action == 'payment.updated') {
+                    if(body.action == 'payment.created') {
                         const paymentIdNotification: string = body.data.id;
                         console.log("paymentIdNotification*************: ", paymentIdNotification)
                         const payment = await this.getPaymentDetails(parseInt(paymentIdNotification) );
