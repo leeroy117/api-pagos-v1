@@ -7,6 +7,19 @@ export class AppController {
     private readonly appService: AppService,
   ) {}
 
+  @Get()
+  getRoot(): string {
+    return `
+      🚀 API: Pagos
+      <br>
+      💻 Entorno: Desarrollo
+      <br>
+      📅 Última actualización: 10/04/2025
+      <br>
+      🔧 Versión: v1.0.0
+    `;
+  }
+
   @Get('check-status')
   getHello()  {
     // return this.appService.getHello();
