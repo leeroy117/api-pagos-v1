@@ -90,11 +90,25 @@ export class DatabaseService {
     }
 
     async query<T = any>(sql: string, params?: any[]): Promise<any> {
-        if (!this.dbConnection) {
-          throw new Error('❌ No hay conexión a la base de datos');
+        try {
+            if (this.isConnectionClosed()) {
+                console.warn('⚠️ Conexión cerrada. Reconectando...');
+                await this.reconnect();
+            }
+
+            const [rows] = await this.dbConnection.execute(sql, params);
+            return rows;
+        } catch (error) {
+            if (error.message.includes('closed state') || error.code === 'PROTOCOL_CONNECTION_LOST') {
+                console.warn('🔁 Reintento por conexión perdida...');
+                await this.reconnect();
+                const [rows] = await this.dbConnection.execute(sql, params);
+                return rows;
+            }
+
+            console.error('❌ Error en query:', error);
+            throw error;
         }
-        const [rows] = await this.dbConnection.execute(sql, params);
-        return rows;
     }
 
     async close(): Promise<void> {
@@ -106,5 +120,27 @@ export class DatabaseService {
           this.sshClient.end();
           console.log('🔹 Conexión SSH cerrada');
         }
+    }
+
+    private isConnectionClosed(): boolean {
+        try {
+            this.dbConnection.query('SELECT 1');
+            return false;
+        } catch (e) {
+            return true;
+        }
+    }
+
+    private async reconnect(): Promise<void> {
+        try {
+            if (this.dbConnection) await this.dbConnection.end();
+            if (this.sshClient) this.sshClient.end();
+        } catch (e) {
+            console.warn('⚠️ Error cerrando conexiones antiguas:', e);
+        }
+
+        const [conn, ssh] = await this.getConnection();
+        this.dbConnection = conn;
+        this.sshClient = ssh;
     }
 }
