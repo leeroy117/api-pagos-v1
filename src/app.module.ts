@@ -10,9 +10,21 @@ import { ServiciosModule } from './servicios/servicios.module';
 import { HealthCheckService } from '@nestjs/terminus';
 import { HealthCheckExecutor } from '@nestjs/terminus/dist/health-check/health-check-executor.service';
 import { HealthModule } from './health/health.module';
+import { MpbricksModule } from './mpbricks/mpbricks.module';
+import { ScheduleModule } from '@nestjs/schedule';
+
 
 @Module({
-  imports: [DatabaseModule, MercadopagoModule, PagosModule, InfoalumnosModule, ServiciosModule, HealthModule],
+  imports: [
+    ScheduleModule.forRoot(),
+    DatabaseModule, 
+    MercadopagoModule, 
+    PagosModule, 
+    InfoalumnosModule, 
+    ServiciosModule, 
+    HealthModule, 
+    MpbricksModule,
+  ],
   controllers: [AppController],
   providers: [AppService, DatabaseService],
 })

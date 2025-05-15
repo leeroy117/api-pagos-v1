@@ -1,4 +1,4 @@
-import { Injectable, InternalServerErrorException, NotFoundException } from '@nestjs/common';
+import { Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
 import { CreatePreferenceCheckoutPro } from './dto/CreatePreferenceCheckoutProDto';
 import { createId } from '@paralleldrive/cuid2';
 import { PreferenceRequest, PreferenceResponse } from 'mercadopago/dist/clients/preference/commonTypes';
@@ -6,7 +6,7 @@ import { PreferenceCreateData } from 'mercadopago/dist/clients/preference/create
 import MercadoPagoConfig, { Preference, Payment } from 'mercadopago';
 import { PaymentGetData } from 'mercadopago/dist/clients/payment/get/types';
 import { DatabaseService } from 'src/database/database.service';
-import { log } from 'console';
+import { Cron } from '@nestjs/schedule';
 
 type TEvent = {
     id: number,
@@ -19,8 +19,6 @@ type TEvent = {
     data: any
 }
 
-
-
 type TPreferenceAG = {
     id: number;
     external_reference: string;
@@ -32,6 +30,7 @@ type TPreferenceAG = {
 }
 @Injectable()
 export class MercadopagoService {
+    private readonly logger = new Logger(MercadopagoService.name);
     client: MercadoPagoConfig;
     accessToken = 'APP_USR-685231143478605-032716-fc9650b6eed0a8ea2ade09f8978ca9ef-2325182738';
 
@@ -54,6 +53,11 @@ export class MercadopagoService {
             auto_return: preferenceData.auto_return,
             back_urls: preferenceData.back_urls,
             external_reference: externalReference,
+            binary_mode: true,
+            statement_descriptor: 'AcademiaGlobal',
+            payment_methods: {
+                excluded_payment_methods: []
+            }
         }
 
         const preferenceCreateData: PreferenceCreateData = {
@@ -281,9 +285,15 @@ export class MercadopagoService {
                         // return payment;
                     }
         
-                    // if(body.action == ''){
-        
-                    // }
+                    // falta logica de cuando el pago es actualizado
+                    // por ejmeplo status refunded
+                    // actualizar tb_pp_payments
+                    // actualizar en tb_pagos status a 0
+                    // deshacer operacion, por ejemplo si es extraordinario deshabilitar materia
+                    // carga queda pendiente de analizar
+                    if(body.action == 'payment.updated') {
+                        
+                    }
         
                 }
             }catch(e) {
@@ -561,6 +571,18 @@ export class MercadopagoService {
             }
             // return payment;
         // }
+
+    }
+
+    @Cron('*/5 * * * *')
+    async stayLiving() {
+        try{
+            const response = await this.databaseService.query("SELECT 1");
+            console.log("🚀 ~ stayLiving ~ response:", response)
+            this.logger.debug('✅ Conexión viva con la base de datos');
+        }catch (error) {
+            this.logger.error('❌ Error al mantener conexión viva:', error);
+        }
 
     }
 }
