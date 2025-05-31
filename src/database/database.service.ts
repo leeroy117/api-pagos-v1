@@ -31,21 +31,20 @@ export class DatabaseService {
         let clientChannel:ClientChannel = Object.create(null) as ClientChannel; 
 
         let mysqlConfig = {
-            user: 'agmoodledev',
-            password: '56huaj8*JQ+8*9*25.98pt',
+            user: 'root',
+            password: 'P1Mu*y3Xf+a8dZ-y+1i*Po.8I+u9-Ry*',
             database: 'escolar',
             port: 3306,
             stream: clientChannel,
-            host: 'databaseag.cu1njaiwfxac.us-east-2.rds.amazonaws.com'
+            host: 'agdatabases.cu1njaiwfxac.us-east-2.rds.amazonaws.com'
             // multipleStatements: true
         };
     
         let sshTunnelConfig = {
-            username: 'dtmomejia',
-            host: '3.19.4.250',
+            username: 'ubuntu',
+             host: '3.139.164.72',
             port: 22,
-            privateKey: fs.readFileSync('./dtmomejia.pem'),
-            passphrase: 'u#/vsSy2QWBltvmIxOXIUGVxA6CDghpI6mR3pUoQEUiOGyPXukYVK+qFxDFo',
+            privateKey: fs.readFileSync('./ag_academia_global.pem'),
             keepaliveInterval: 15000,
             keepaliveCountMax: 10  
         };
